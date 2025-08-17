@@ -1,30 +1,27 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend to connect
+CORS(app)
 
-# Path to JSON files
 PANTRY_FILE = "pantry.json"
 RECIPES_FILE = "recipes.json"
 
-# Read pantry from file
 def load_pantry():
-    if os.path.exists(PANTRY_FILE):
+    try:
         with open(PANTRY_FILE, "r") as f:
-            data = json.load(f)
-            # Support both formats: {"pantry": [...]} and [...]
-            if isinstance(data, dict) and "pantry" in data:
-                return data["pantry"]
-            return data if isinstance(data, list) else []
-    return []
+            return json.load(f)
+    except FileNotFoundError:
+        return []
 
-# Write pantry to file
 def save_pantry(pantry_data):
     with open(PANTRY_FILE, "w") as f:
-        json.dump(pantry_data, f, indent=2)
+        json.dump(pantry_data, f, indent=4)
 
 def save_recipe(recipe, mode):
     try:
@@ -66,26 +63,40 @@ def call_watsonx(prompt):
 def health():
     return jsonify({"status": "ok", "message": "Flask backend running"})
 
-# Routes
+# Pantry endpoints
 @app.route("/api/pantry", methods=["GET"])
 def get_pantry():
     pantry = load_pantry()
-    return jsonify({"pantry": pantry})
+    return jsonify({"success": True, "data": pantry})
 
-@app.route("/api/pantry", methods=["POST"])
-def add_to_pantry():
-    data = request.json
+@app.route("/api/pantry/add", methods=["POST"])
+def add_pantry_item():
+    data = request.json or {}
+    name = (data.get("name") or "").strip()
+    if not name:
+        return jsonify({"success": False, "error": "name required"}), 400
+    
+    quantity = data.get("quantity", 1)
+    unit = data.get("unit", "units")
+    category = data.get("category", "other")
+    
     pantry = load_pantry()
     
     # Generate simple ID
     new_id = max([item.get("id", 0) for item in pantry], default=0) + 1
     
-    # Add ID to the item
-    data["id"] = new_id
+    new_item = {
+        "id": new_id,
+        "name": name,
+        "quantity": quantity,
+        "unit": unit,
+        "category": category
+    }
     
-    pantry.append(data)
+    pantry.append(new_item)
     save_pantry(pantry)
-    return jsonify({"message": "Item added", "pantry": pantry})
+    
+    return jsonify({"success": True, "data": new_item})
 
 @app.route("/api/pantry/delete/<int:item_id>", methods=["DELETE"])
 def delete_pantry_item(item_id):
@@ -131,42 +142,30 @@ def generate_recipe():
     pantry_list = ", ".join([f"{item['name']} ({item['quantity']} {item['unit']})" for item in pantry])
     
     if mode == "home":
-        prompt = f"""You are a helpful cooking assistant for home cooking.
-Create a simple, beginner-friendly recipe using these pantry items: {pantry_list}
-
-Requirements:
-- Keep it easy with 4-6 simple steps
-- Use everyday measurements (cups, tsp, tbsp)
-- Simple cooking terms (boil, fry, stir, mix)
-- Perfect for family dinners
-- Focus on comfort food
-
-Generate a recipe that a home cook can easily follow."""
+        prompt = f"""Generate a simple, home-cooked recipe using {pantry_list}. Keep it easy, 4–6 steps max.
+        
+🍳 HOME COOK REQUIREMENTS:
+- Simple cooking terms (boil, fry, stir)
+- Everyday measurements (cups, tsp, tbsp)
+- 4-6 easy steps
+- Family-friendly
+- Common kitchen tools"""
     else:  # professional mode
-        prompt = f"""You are a Michelin-star chef creating a professional recipe.
-Create a restaurant-quality dish using these pantry items: {pantry_list}
+        prompt = f"""You are a Michelin-star chef. Generate a professional recipe with precise steps, temps, and techniques using {pantry_list}. Minimum 10 steps.
 
-Requirements:
-- Minimum 10 detailed steps with precise techniques
-- Include exact temperatures and timing
-- Use professional culinary terms (sauté, brunoise, deglaze, etc.)
-- Add plating and presentation instructions
-- Focus on flavor development and texture
-
-Generate a professional-level recipe with restaurant-quality techniques."""
+👨‍🍳 PROFESSIONAL REQUIREMENTS:
+- Professional techniques (sauté, brunoise, deglaze)
+- Exact temperatures and timing
+- 10+ detailed steps
+- Restaurant-quality presentation
+- Advanced culinary methods"""
     
     recipe = call_watsonx(prompt)
     save_recipe(recipe, mode)
     
     return jsonify({
         "success": True,
-        "data": {
-            "meals": [recipe],  # Wrap in meals array for frontend compatibility
-            "shoppingList": [
-                {"item": ingredient, "quantity": 1, "unit": "unit"} 
-                for ingredient in recipe.get("missingIngredients", [])
-            ]
-        },
+        "data": recipe,
         "mode": mode
     })
 
@@ -176,10 +175,6 @@ def generate_meal_plan():
     data = request.json or {}
     cooking_mode = data.get("cookingMode", "home")
     
-    # Redirect to generate_recipe with proper mode mapping
-    recipe_data = {"mode": cooking_mode}
-    
-    # Call the recipe generation logic
     pantry = load_pantry()
     
     if not pantry:
@@ -192,31 +187,25 @@ def generate_meal_plan():
     pantry_list = ", ".join([f"{item['name']} ({item['quantity']} {item['unit']})" for item in pantry])
     
     if cooking_mode == "professional":
-        prompt = f"""You are a professional chef and nutritionist with 20+ years of culinary experience.
-Create 3 detailed, restaurant-quality recipes using PRIMARILY these pantry items: {pantry_list}.
+        prompt = f"""You are a professional chef creating restaurant-quality recipes using: {pantry_list}
 
-🍳 PROFESSIONAL MODE REQUIREMENTS:
-1. Each recipe MUST have 8-12 DETAILED cooking steps with exact temperatures, times, and professional techniques
-2. Include precise preparation instructions (julienne, brunoise, sauté, braise, simmer, deglaze, reduce, etc.)
-3. Specify exact cooking temperatures, pan sizes, and timing for each step
-4. Include visual and sensory cues for doneness (golden brown, fragrant, tender-crisp, etc.)
-5. Add advanced techniques and plating suggestions for restaurant presentation
-6. Include professional tips for texture, flavor development, and flavor balance
-
-Respond with detailed recipes perfect for professional chefs."""
+👨‍🍳 PROFESSIONAL MODE:
+- 8-12 detailed steps with exact temperatures
+- Professional techniques (julienne, brunoise, sauté, deglaze, reduce)
+- Pan sizes and precise timing
+- Visual/sensory cues (golden brown, fragrant)
+- Advanced plating suggestions
+- Restaurant presentation"""
     else:  # home mode
-        prompt = f"""You are a helpful recipe assistant for home cooking.
-Create 3 simple and beginner-friendly recipes using PRIMARILY these pantry items: {pantry_list}.
+        prompt = f"""Create simple home cooking recipes using: {pantry_list}
 
-🍳 HOME COOK MODE REQUIREMENTS:
-1. Each recipe should have 6-7 simple, easy-to-follow steps
-2. Use everyday measurements (cups, tsp, tbsp) instead of grams
-3. Keep instructions short and use simple cooking terms (boil, fry, stir, mix, cook)
-4. Focus on ease, speed, and common kitchen tools that home cooks have
-5. Make recipes clear for someone cooking at home without professional equipment
-6. Prioritize comfort food and family-friendly flavors
-
-Create simple, beginner-friendly recipes perfect for home cooking."""
+🍳 HOME COOK MODE:
+- 6-7 simple steps
+- Everyday measurements (cups, tsp, tbsp)
+- Simple cooking terms (boil, fry, stir, mix)
+- Common kitchen tools
+- Family-friendly comfort food
+- Easy and quick preparation"""
     
     # Generate multiple recipes (mock for now)
     recipes = []
@@ -241,4 +230,4 @@ Create simple, beginner-friendly recipes perfect for home cooking."""
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, port=5001)  # Use port 5001 to avoid conflict with Node.js backend
