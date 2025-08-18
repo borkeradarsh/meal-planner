@@ -1,44 +1,34 @@
 {
   "pantry": [
     {
-      "id": "1755429453265",
+      "id": "1755533721096",
       "name": "rice",
-      "quantity": 1,
+      "quantity": 1.0,
       "unit": "kg",
       "category": "",
       "notes": "",
-      "createdAt": "2025-08-17T11:17:33.265Z",
-      "updatedAt": "2025-08-17T11:17:33.265Z"
+      "createdAt": "2025-08-18T21:45:21.096759",
+      "updatedAt": "2025-08-18T21:45:21.096759"
     },
     {
-      "id": "1755429478267",
-      "name": "tomato",
-      "quantity": 1,
-      "unit": "kg",
-      "category": "",
+      "id": "1755533748269",
+      "name": "chicken biryani masala",
+      "quantity": 1.0,
+      "unit": "package",
+      "category": "spices",
       "notes": "",
-      "createdAt": "2025-08-17T11:17:58.267Z",
-      "updatedAt": "2025-08-17T11:17:58.267Z"
+      "createdAt": "2025-08-18T21:45:48.269322",
+      "updatedAt": "2025-08-18T21:45:48.269322"
     },
     {
-      "id": "1755429485032",
-      "name": "lentils",
-      "quantity": 1,
+      "id": "1755533758441",
+      "name": "chicken",
+      "quantity": 1.0,
       "unit": "kg",
       "category": "",
       "notes": "",
-      "createdAt": "2025-08-17T11:18:05.032Z",
-      "updatedAt": "2025-08-17T11:18:05.032Z"
-    },
-    {
-      "id": "1755429492886",
-      "name": "salt",
-      "quantity": 1,
-      "unit": "kg",
-      "category": "",
-      "notes": "",
-      "createdAt": "2025-08-17T11:18:12.886Z",
-      "updatedAt": "2025-08-17T11:18:12.886Z"
+      "createdAt": "2025-08-18T21:45:58.441771",
+      "updatedAt": "2025-08-18T21:45:58.441771"
     }
   ]
 }

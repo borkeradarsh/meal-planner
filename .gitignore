@@ -16,9 +16,12 @@ backend/*.pyo
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
 
 # Database
 backend/db.sqlite3
+*.sqlite
+*.sqlite3
 
 # IDE
 .vscode/
@@ -42,3 +45,15 @@ yarn-error.log*
 # Package manager lock files (keep only one)
 frontend/yarn.lock
 backend/pip-freeze.txt
+
+# Test files and development docs
+test_*.py
+*_test.py
+TEST_*.md
+DEVELOPMENT_*.md
+PRODUCTION_*.md
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
