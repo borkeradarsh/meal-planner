@@ -1,221 +1,214 @@
-# Smart Meal Planner - IBM Hackathon Project
+# 🍽️ Pantry AI - Smart Meal Planning App - IBM Hackathon Project
 
-A full-stack AI-powered meal planning application that suggests recipes based on your pantry items. Built with Next.js frontend and Python Flask backend, designed to integrate with IBM watsonx AI.
+An intelligent meal planning application that uses IBM Watsonx AI to generate personalized recipes based on your pantry ingredients. Choose between home cook mode for simple recipes or professional mode for detailed culinary instructions.
 
-## 🏗️ Project Structure
+![Pantry AI Screenshot](https://via.placeholder.com/800x400/4F46E5/FFFFFF?text=Pantry+AI+Meal+Planner)
 
-```
-ibmmeal/
-├── backend/                    # Python Flask API
-│   ├── app.py                 # Main Flask application
-│   ├── models.py              # SQLAlchemy database models
-│   ├── init_db.py             # Database initialization script
-│   ├── requirements.txt       # Python dependencies
-│   ├── .env.example          # Environment variables template
-│   └── db.sqlite3            # SQLite database (created after setup)
-├── app/                       # Next.js frontend (App Router)
-│   ├── page.tsx              # Main meal planner interface
-│   ├── layout.tsx            # Root layout
-│   └── globals.css           # Global styles
-├── package.json              # Node.js dependencies
-└── README.md                 # This file
-```
+## ✨ Features
 
-## 🚀 Features
+- 🤖 **AI-Powered Recipe Generation** - IBM Watsonx integration for intelligent meal suggestions
+- 🏠 **Dual Cooking Modes** - Home cook (6-8 simple steps) and Professional (12-15 detailed steps)
+- 📱 **Modern UI/UX** - Responsive design with dark/light mode support
+- 🛒 **Smart Shopping Lists** - Auto-generated shopping lists for missing ingredients
+- 📦 **Pantry Management** - Easy ingredient tracking with quantity management
+- 🎨 **Beautiful Animations** - Smooth transitions powered by Framer Motion
 
-- **Pantry Management**: Add, update, and delete pantry items with quantities and units
-- **AI Meal Planning**: Generate meal suggestions based on available ingredients
-- **Smart Shopping Lists**: Get recommendations for missing ingredients
-- **Modern UI**: Responsive design with Tailwind CSS and dark mode support
-- **IBM watsonx Integration**: Ready for AI-powered recipe generation
-
-## 🛠️ Prerequisites
-
-- **Python 3.10+**
-- **Node.js 18+**
-- **npm or yarn**
-
-## 📦 Setup Instructions
-
-### 1. Backend Setup (Python Flask)
-
-1. **Navigate to backend directory:**
-   ```bash
-   cd backend
-   ```
-
-2. **Create virtual environment:**
-   ```bash
-   python -m venv venv
-   ```
-
-3. **Activate virtual environment:**
-   ```bash
-   # Windows
-   venv\Scripts\activate
-   # macOS/Linux
-   source venv/bin/activate
-   ```
-
-4. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Setup environment variables:**
-   ```bash
-   copy .env.example .env
-   # Edit .env file and set USE_WATSONX=false for initial testing
-   ```
-
-6. **Initialize database:**
-   ```bash
-   python init_db.py
-   ```
-
-7. **Start the Flask server:**
-   ```bash
-   python app.py
-   ```
-
-   Backend will run at `http://localhost:5000`
-
-### 2. Frontend Setup (Next.js)
-
-1. **Navigate to project root:**
-   ```bash
-   cd ..
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Set API base URL (optional):**
-   ```bash
-   # Create .env.local file
-   echo "NEXT_PUBLIC_API_BASE=http://localhost:5000" > .env.local
-   ```
-
-4. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-   Frontend will run at `http://localhost:3000`
-
-## 🧪 Testing the Application
-
-1. **Open browser:** Go to `http://localhost:3000`
-2. **Add pantry items:** Use the form to add ingredients with quantities
-3. **Generate meal plan:** Click "Plan My Meal" to get AI-generated suggestions
-4. **View results:** See the recipe and any missing ingredients
-
-## 🤖 IBM watsonx Integration
-
-The application is designed to integrate with IBM watsonx AI for intelligent meal planning:
-
-### Environment Variables for watsonx
-
-Update your `backend/.env` file with your IBM credentials:
-
-```env
-WATSONX_API_KEY=your_actual_api_key_here
-WATSONX_URL=https://us-south.ml.cloud.ibm.com
-WATSONX_PROJECT_ID=your_project_id_here
-USE_WATSONX=true
-```
-
-### Implementation Steps
-
-1. **Get IBM Cloud credentials** from your IBM Cloud account
-2. **Create watsonx project** and note the project ID
-3. **Update environment variables** in `backend/.env`
-4. **Implement watsonx integration** in `backend/watsonx_integration.py`
-5. **Set USE_WATSONX=true** to enable AI features
-
-### Mock Mode
-
-For development and testing, the app runs in mock mode (`USE_WATSONX=false`) which provides simple rule-based meal suggestions.
-
-## 📊 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/pantry` | List all pantry items |
-| POST | `/pantry` | Add/update pantry item |
-| DELETE | `/pantry/<id>` | Delete pantry item |
-| POST | `/plan-meal` | Generate meal plan |
-
-## 🎨 Tech Stack
-
-### Frontend
-- **Next.js 15** with App Router
-- **React 19** with TypeScript
-- **Tailwind CSS** for styling
-- **Responsive design** with dark mode
+## 🚀 Tech Stack
 
 ### Backend
-- **Flask** web framework
-- **SQLAlchemy** ORM with SQLite
-- **Flask-CORS** for cross-origin requests
-- **IBM watsonx AI** integration ready
+- **Flask** - Python web framework
+- **IBM Watsonx AI** - Advanced recipe generation
+- **JSON Database** - Simple data storage for pantry items
 
-## 🔧 Development
+### Frontend
+- **Next.js 14** - React framework with App Router
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+- **Lucide React** - Beautiful icons
 
-### Frontend Development
+## 🛠️ Quick Start
+
+### Prerequisites
+- Python 3.8+ 
+- Node.js 18+
+- IBM Cloud account with Watsonx access
+
+### 1. Clone the Repository
 ```bash
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run start      # Start production server
-npm run lint       # Run ESLint
+git clone <your-repo-url>
+cd pantry-ai-app
 ```
 
-### Backend Development
+### 2. Backend Setup
 ```bash
-# With virtual environment activated
-python app.py              # Start Flask server
-python init_db.py          # Reset database
-pip freeze > requirements.txt  # Update dependencies
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Environment setup
+cp .env.example .env
+# Edit .env with your IBM Watsonx credentials
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Environment setup
+cp .env.example .env.local
+# Configure your API endpoints
+```
+
+### 4. Get IBM Watsonx Credentials
+1. Go to [IBM Cloud](https://cloud.ibm.com/)
+2. Create a Watson Machine Learning service
+3. Get your API key from [IAM settings](https://cloud.ibm.com/iam/apikeys)
+4. Create a project in Watson Studio and get the project ID
+5. Update your backend `.env` file:
+
+```env
+WATSONX_API_KEY=your_ibm_cloud_api_key_here
+WATSONX_PROJECT_ID=your_watsonx_project_id_here
+```
+
+### 5. Run the Application
+```bash
+# Start backend (from backend directory)
+python main.py
+
+# Start frontend (from frontend directory - new terminal)
+npm run dev
+```
+
+Visit `http://localhost:3000` to see the application! 🎉
+
+## 📁 Project Structure
+
+```
+pantry-ai-app/
+├── backend/
+│   ├── main.py              # Main Flask application
+│   ├── requirements.txt     # Python dependencies
+│   ├── db.json             # Pantry data storage
+│   ├── .env.example        # Environment template
+│   └── README.md           # Backend documentation
+├── frontend/
+│   ├── app/                # Next.js App Router
+│   │   ├── layout.js       # Root layout
+│   │   ├── page.js         # Main application
+│   │   └── api/            # API routes
+│   ├── components/         # Reusable UI components
+│   ├── lib/                # Utility libraries
+│   ├── styles/             # CSS styles
+│   └── package.json        # Frontend dependencies
+├── .gitignore              # Git ignore rules
+└── README.md               # This file
+```
+
+## 🍳 Cooking Modes
+
+### 🏠 Home Cook Mode
+- **6-8 simple steps** per recipe
+- **Basic techniques** and common ingredients
+- **Time-efficient** cooking methods
+- Perfect for **everyday meals**
+
+### 👨‍🍳 Professional Mode
+- **12-15 detailed steps** with precise techniques
+- **Advanced culinary methods** and terminology
+- **Restaurant-quality** plating instructions
+- **Detailed timing** and temperature guidance
+
+## 🔧 Configuration
+
+### Backend Environment Variables
+```env
+# Flask Configuration
+PORT=5000
+FLASK_ENV=development
+FLASK_DEBUG=True
+
+# IBM Watsonx Configuration
+WATSONX_API_KEY=your_api_key_here
+WATSONX_PROJECT_ID=your_project_id_here
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+
+# Security
+SECRET_KEY=your_secret_key_here
+
+# CORS Configuration
+ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+```
+
+### Frontend Environment Variables
+```env
+NEXT_PUBLIC_API_BASE=http://localhost:5000
 ```
 
 ## 🚀 Deployment
 
 ### Backend Deployment
-- Deploy to platforms like Heroku, Railway, or IBM Cloud
-- Set environment variables for production
-- Use PostgreSQL or other production database
+1. **Heroku/Railway/DigitalOcean**: Use `main.py` as entry point
+2. **Environment**: Set production environment variables
+3. **Database**: Consider upgrading to PostgreSQL for production
 
 ### Frontend Deployment
-- Deploy to Vercel, Netlify, or similar platforms
-- Set `NEXT_PUBLIC_API_BASE` to your backend URL
-- Configure build settings for Next.js
+1. **Vercel** (Recommended): Connect your GitHub repo
+2. **Netlify**: Build command: `npm run build`
+3. **Environment**: Configure `NEXT_PUBLIC_API_BASE` to your backend URL
+
+## 📚 API Documentation
+
+### Core Endpoints
+- `GET /api/health` - Health check
+- `GET /api/pantry` - Get all pantry items
+- `POST /api/pantry` - Add new pantry item
+- `PUT /api/pantry/{id}` - Update pantry item
+- `DELETE /api/pantry/{id}` - Remove pantry item
+- `POST /api/meal-plan` - Generate AI meal plan
+
+### Request Examples
+```javascript
+// Generate meal plan
+POST /api/meal-plan
+{
+  "cookingMode": "professional" // or "home"
+}
+```
 
 ## 🤝 Contributing
 
-1. **Fork the repository**
-2. **Create feature branch:** `git checkout -b feature/amazing-feature`
-3. **Commit changes:** `git commit -m 'Add amazing feature'`
-4. **Push to branch:** `git push origin feature/amazing-feature`
-5. **Open Pull Request**
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📝 License
 
-This project is part of the IBM Hackathon and is for educational/demonstration purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Troubleshooting
+## 🆘 Support
 
-### Common Issues
+- 📧 Email: your-email@example.com
+- 🐛 Issues: [GitHub Issues](https://github.com/your-username/pantry-ai-app/issues)
+- 📖 Docs: [GitHub Documentation](https://github.com/your-username/pantry-ai-app/wiki)
 
-1. **CORS errors:** Ensure Flask-CORS is installed and configured
-2. **Database errors:** Run `python init_db.py` to reset database
-3. **API connection failed:** Check that backend is running on port 5000
-4. **Node modules issues:** Delete `node_modules` and run `npm install`
+## 🙏 Acknowledgments
 
-### Getting Help
+- [IBM Watsonx](https://www.ibm.com/watsonx) for AI capabilities
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [Tailwind CSS](https://tailwindcss.com/) for beautiful styling
+- [Framer Motion](https://www.framer.com/motion/) for smooth animations
 
-- Check the console for error messages
-- Verify both frontend and backend are running
-- Ensure environment variables are set correctly
+---
+
+Made with ❤️ by [Your Name](https://github.com/your-username)
