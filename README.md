@@ -2,7 +2,7 @@
 
 An intelligent meal planning application that uses IBM Watsonx AI to generate personalized recipes based on your pantry ingredients. Choose between home cook mode for simple recipes or professional mode for detailed culinary instructions.
 
-![Pantry AI Screenshot](https://via.placeholder.com/800x400/4F46E5/FFFFFF?text=Pantry+AI+Meal+Planner)
+
 
 ## ✨ Features
 
